@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled1/FarmerPages/home/projects_list.dart';
-import '../home/agricultural_project_screen.dart'; // Import the AgriculturalProjectScreen
+// Import the AgriculturalProjectScreen
 
 class SuccessScreen extends StatelessWidget {
   const SuccessScreen({super.key});

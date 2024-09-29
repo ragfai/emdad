@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:untitled1/FarmerPages/home/projects_list.dart';
-import 'package:untitled1/FarmerPages/profile/TermsScreen.dart';
 import 'package:untitled1/StartPages/signup.dart';
 
 void main() {

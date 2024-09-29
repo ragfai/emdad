@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled1/FarmerPages/add%20farm/add_project.dart';
 import 'package:untitled1/FarmerPages/home/agricultural_project_screen.dart';
 import 'package:untitled1/FarmerPages/profile/ProfilePage.dart';
-import 'package:untitled1/FarmerPages/profile/TermsScreen.dart';
-import 'package:untitled1/StartPages/signup.dart'; // Import ProfileScreen
+// Import ProfileScreen
 
 class ProjectList extends StatefulWidget {
   const ProjectList({super.key});

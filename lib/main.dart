@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         "/signup": (context) => const SignupPage(),
         //"/resetpassword": (context) => const PasswordResetPage(),
         "/forgetpassword": (context) => const ForgotPasswordScreen(),
-        "/phoneverification": (context) => phoneverification(),
+        "/phoneverification": (context) => const phoneverification(),
 
 //farmer
 //bar screens
