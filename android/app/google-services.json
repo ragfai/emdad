@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1086736804471",
+    "project_id": "emdad-94ee5",
+    "storage_bucket": "emdad-94ee5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086736804471:android:e25e8c624e3bb5d441f472",
+        "android_client_info": {
+          "package_name": "com.example.untitled1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9HpTB9TJOlWUzR2K88uvGNeg4W9alFUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

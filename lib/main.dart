@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/FarmerPages/home/farmerHome.dart';
 import 'package:untitled1/FarmerPages/profile/InfoScreen.dart';
 import 'package:untitled1/FarmerPages/profile/CustomerServiceScreen.dart';
-import 'package:untitled1/FarmerPages/profile/LanguageChangeScreen.dart';
 import 'package:untitled1/FarmerPages/profile/FAQscreen.dart';
 import 'package:untitled1/FarmerPages/profile/ProfilePage.dart';
 import 'package:untitled1/FarmerPages/profile/TermsScreen.dart';
@@ -17,15 +17,24 @@ import 'package:untitled1/FarmerPages/home/projects_list.dart';
 import 'package:untitled1/StartPages/LoginPage.dart';
 import 'package:untitled1/StartPages/forgotpassword.dart';
 import 'package:untitled1/StartPages/phoneVerification.dart';
-import 'package:untitled1/StartPages/resetpassword.dart';
 import 'package:untitled1/StartPages/signup.dart';
 import 'package:untitled1/StartPages/welcome.dart';
-
 // Import the new screens for the payment flow
 
-void main() {
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Ensure bindings are initialized before Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -43,18 +52,17 @@ class MyApp extends StatelessWidget {
         "/signup": (context) => const SignupPage(),
         //"/resetpassword": (context) => const PasswordResetPage(),
         "/forgetpassword": (context) => const ForgotPasswordScreen(),
-        "/phoneverification": (context) => const phoneverification(),
+        "/phoneverification": (context) => const PhoneVerification(),
 
 //farmer
 //bar screens
+        'home': (context) => const FarmerHomePage(),
         '/profile': (context) => const ProfilePage(),
         "/agricultural-project": (context) => const AgriculturalProjectScreen(),
         "/ProjectList": (context) => const ProjectList(),
         '/account': (context) => const InfoScreen(), // Account screen route
         '/customer_service': (context) =>
             const CustomerServiceScreen(), // Customer service route
-        '/language_change': (context) =>
-            const LanguageChangeScreen(), // Language change route
         '/FAQ': (context) => const FAQscreen(), // Privacy policy route
         '/terms': (context) => const TermsScreen(), // Terms screen route
 

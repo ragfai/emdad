@@ -1,151 +1,163 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/FarmerPages/home/farmerHome.dart';
+import 'package:untitled1/FarmerPages/home/projects_list.dart';
+import 'package:untitled1/FarmerPages/profile/ProfilePage.dart';
 
-class AgriculturalProjectScreen extends StatelessWidget {
+class AgriculturalProjectScreen extends StatefulWidget {
   const AgriculturalProjectScreen({super.key});
+
+  @override
+  _AgriculturalProjectScreenState createState() =>
+      _AgriculturalProjectScreenState();
+}
+
+class _AgriculturalProjectScreenState extends State<AgriculturalProjectScreen> {
+  int _selectedTabIndex = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.green),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: const Text(
-          'تفاصيل الفرصة الزراعية',
-          style: TextStyle(color: Colors.green, fontSize: 18),
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Image Container
-            Container(
-              width: double.infinity,
-              height: 200,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                      'assets/tomato_farm.jpg'), // Replace with your asset image path
-                  fit: BoxFit.cover,
-                ),
+      backgroundColor: const Color(0xFFF9FAF9),
+      body: Stack(
+        children: [
+          // Background Image with specific height to show full picture
+          Container(
+            height: 700, // Adjust as needed to fit the image well
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/projectDetail.png'),
+                fit: BoxFit.cover,
               ),
             ),
-            // Project Details Container
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 770,
+            child: Container(
+              height: 56,
+              color: const Color(0xFFF9FAF9),
+            ),
+          ),
+          // Content
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 220), // Add extra space below the image
+
+                // Project Details without White Background Box
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'مشروع زراعة الطماطم',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green[700],
+                      // Title with gradient
+                      ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [
+                            Color(0xFF4B7960),
+                            Color(0xFF728F66),
+                            Color(0xFFA2AA6D),
+                          ],
+                        ).createShader(
+                          Rect.fromLTWH(0.0, 0.0, bounds.width, bounds.height),
                         ),
                       ),
-                      const SizedBox(height: 8),
+
+                      const SizedBox(height: 16),
+                      // Add Farm Return Button aligned to the left and smaller
                       Row(
                         children: [
-                          const Icon(Icons.location_on, color: Colors.green),
-                          const SizedBox(width: 4),
-                          Text(
-                            'المملكة العربية السعودية، سايجر',
-                            style: TextStyle(color: Colors.grey[700]),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      // Add Return Button
-                      Center(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.pushNamed(context, "/deposit-investment");
-                          },
-                          icon: const Icon(Icons.add, color: Colors.white),
-                          label: const Text('أضف عائد المزرعة'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                          Container(
+                            height: 36,
+                            width: 160, // Make the button smaller
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.0),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFF4B7960),
+                                  Color(0xFF728F66),
+                                  Color(0xFFA2AA6D),
+                                ],
+                              ),
+                            ),
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, "/deposit-investment");
+                              },
+                              icon: const Icon(Icons.add,
+                                  color: Colors.white, size: 20),
+                              label: const Text(
+                                'أضف عائد المزرعة',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                backgroundColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                shadowColor: Colors.transparent,
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Information Grid
-                      GridView.count(
-                        crossAxisCount: 3,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        children: [
-                          _buildInfoTile('مدة الفرصة', 'قصيرة الأجل'),
-                          _buildInfoTile('المساحة الكلية', '100م²'),
-                          _buildInfoTile('نوع المحصول', 'الطماطم'),
-                          _buildInfoTile('نسبة الاستثمار', '10%'),
-                          _buildInfoTile('نوع الإدارة', 'ملكية خاصة'),
-                          _buildInfoTile('معدل الإنتاج', '5000kg'),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      // Progress Bar for Funding Rate
-                      const Text(
-                        'نسبة التمويل',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      LinearProgressIndicator(
-                        value: 0.8,
-                        backgroundColor: Colors.grey[200],
-                        color: Colors.green,
-                        minHeight: 8,
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        '80%',
-                        style: TextStyle(fontSize: 16, color: Colors.green),
-                      ),
+                      // Additional Content (e.g., information grid) goes here
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'الحساب الشخصي',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.nature),
+            label: 'المشاريع الزراعية',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'الرئيسية',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.agriculture),
-            label: 'المشاريع الزراعية',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'الملف الشخصي',
-          ),
         ],
-        selectedItemColor: Colors.green,
+        currentIndex: _selectedTabIndex,
+        selectedItemColor: const Color(0xFF4B7960),
         unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          setState(() {
+            _selectedTabIndex = index;
+          });
+
+          // Handle navigation
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProjectList()),
+            );
+          } else if (index == 2) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const FarmerHomePage()),
+              (route) => route.isFirst,
+            );
+          }
+        },
       ),
     );
   }
@@ -163,11 +175,17 @@ class AgriculturalProjectScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.green[700]),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF4B7960),
+              fontFamily: 'Markazi Text',
+            ),
           ),
           const SizedBox(height: 4),
-          Text(subtitle, style: TextStyle(color: Colors.grey[700])),
+          Text(
+            subtitle,
+            style: TextStyle(color: Colors.grey[700]),
+          ),
         ],
       ),
     );
