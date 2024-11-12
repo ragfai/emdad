@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class PhoneVerification extends StatefulWidget {
-  const PhoneVerification({super.key});
+  final String phoneNumber;
+  final Map<String, String?> userData;
+
+  const PhoneVerification({
+    super.key,
+    required this.phoneNumber,
+    required this.userData,
+  });
 
   @override
   _PhoneVerificationState createState() => _PhoneVerificationState();
@@ -12,13 +19,13 @@ class _PhoneVerificationState extends State<PhoneVerification> {
   String _activationCode = '';
   bool _isCodeValid = true;
   final List<TextEditingController> _controllers =
-  List.generate(4, (index) => TextEditingController());
+      List.generate(4, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
 
   void _verifyActivationCode() {
     // Validate the activation code
     if (_activationCode != '1234') {
-      // Replace with your validation logic
+      // Replace '1234' with actual validation logic
       setState(() {
         _isCodeValid = false;
       });
@@ -26,7 +33,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
       setState(() {
         _isCodeValid = true;
       });
-      // Proceed with verification if needed
+      // Proceed with successful verification actions, like saving the verified status
     }
   }
 
@@ -78,12 +85,11 @@ class _PhoneVerificationState extends State<PhoneVerification> {
       ),
       resizeToAvoidBottomInset: false,
       body: Container(
-        height: MediaQuery.of(context).size.height -
-            140, // Reduce height instead of using negative margins
+        height: MediaQuery.of(context).size.height - 140,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/bg2.png'), // Background image
+            image: AssetImage('assets/images/bg2.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -91,7 +97,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
           children: [
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(top: 150.0), // Adjusted padding
+                padding: const EdgeInsets.only(top: 150.0),
                 child: Column(
                   children: [
                     Container(
@@ -139,12 +145,11 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                                height: 8), // Space before the message
-                            const Text(
-                              'تم إرسال رمز تفعيلي إلى رقم الجوال الخاص بك',
+                            const SizedBox(height: 8),
+                            Text(
+                              'تم إرسال رمز تفعيلي إلى ${widget.phoneNumber}',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey,
                                 fontFamily: 'Markazi Text',
@@ -167,7 +172,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: List.generate(
                                 4,
-                                    (index) => GestureDetector(
+                                (index) => GestureDetector(
                                   onTap: () {
                                     FocusScope.of(context)
                                         .requestFocus(_focusNodes[index]);
@@ -186,16 +191,16 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                                         counterText: '',
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8),
-                                          borderSide: BorderSide(
+                                              BorderRadius.circular(8),
+                                          borderSide: const BorderSide(
                                             color: Color(0xFF4B7960),
                                             width: 2,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8),
-                                          borderSide: BorderSide(
+                                              BorderRadius.circular(8),
+                                          borderSide: const BorderSide(
                                             color: Color(0xFF4B7960),
                                             width: 2,
                                           ),
@@ -211,23 +216,22 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                                height: 8), // Space before the error message
+                            const SizedBox(height: 8),
                             if (!_isCodeValid)
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
+                                children: const [
+                                  Icon(
                                     Icons.close,
                                     color: Colors.red,
                                     size: 20,
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Text(
+                                  SizedBox(width: 8),
+                                  Text(
                                     'رمز التفعيل المدخل غير صحيح',
                                     style: TextStyle(
                                       color: Colors.red,
-                                      fontSize: 12, // Small font size
+                                      fontSize: 12,
                                       fontFamily: 'Markazi Text',
                                     ),
                                   ),
@@ -237,7 +241,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 50), // Space after the container
+                    const SizedBox(height: 50),
                     // Verification button with gradient background
                     Center(
                       child: Container(
@@ -278,7 +282,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                     // Resend code option
                     TextButton(
                       onPressed: () {
-                        // Add functionality here to resend the code
+                        // Placeholder for resending the code
                       },
                       child: const Text(
                         'أعد إرسال الرمز',

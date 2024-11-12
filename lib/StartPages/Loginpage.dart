@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,22 +21,71 @@ class _LoginPageState extends State<LoginPage> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
+  Future<void> _signInWithRole() async {
+    try {
+      // Authenticate with Firebase
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Fetch user role from Firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      String role = userDoc['role']; // Assume 'role' field exists in Firestore
+
+      // Redirect based on role
+      if (role == 'admin') {
+        Navigator.pushReplacementNamed(context, '/adminHome');
+      } else {
+        Navigator.pushReplacementNamed(context, '/userHome');
+      }
+    } on FirebaseAuthException catch (e) {
+      // Handle errors (e.g., wrong password, no user found)
+      if (e.code == 'user-not-found') {
+        _showErrorDialog('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        _showErrorDialog('Wrong password provided.');
+      }
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Login Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF9FAF9), // Set AppBar color
-        elevation: 0, // Remove shadow
-        automaticallyImplyLeading: false, // Prevents the default back button
+        backgroundColor: const Color(0xFFF9FAF9),
+        elevation: 0,
+        automaticallyImplyLeading: false,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 15), // Adjusted padding
+            padding: const EdgeInsets.only(right: 15),
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
               },
               child: const Icon(
-                Icons.arrow_forward, // Forward arrow
+                Icons.arrow_forward,
                 color: Colors.black,
                 size: 30,
               ),
@@ -44,8 +95,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       resizeToAvoidBottomInset: false,
       body: Container(
-        height: MediaQuery.of(context).size.height -
-            140, // Reduce height instead of using negative margins
+        height: MediaQuery.of(context).size.height - 140,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -220,7 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Implement login action here
+                      _signInWithRole();
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.zero,

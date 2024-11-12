@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled1/FarmerPages/add%20farm/add_project.dart';
+import 'package:untitled1/FarmerPages/deposite/deposit_returns.dart';
 import 'package:untitled1/FarmerPages/home/agricultural_project_screen.dart';
 import 'package:untitled1/FarmerPages/home/farmerHome.dart';
 import 'package:untitled1/FarmerPages/profile/ProfilePage.dart';
@@ -12,8 +13,8 @@ class ProjectList extends StatefulWidget {
 }
 
 class _ProjectListState extends State<ProjectList> {
-  int _selectedTopTabIndex = 1; // Default to "تحت المعالجة"
-  int _selectedBottomTabIndex = 1; // Default to 'المشاريع الزراعية' tab
+  int _selectedTopTabIndex = 0; // Initial tab index
+  int _selectedBottomTabIndex = 1; // Default selected bottom navigation tab
 
   @override
   Widget build(BuildContext context) {
@@ -21,286 +22,361 @@ class _ProjectListState extends State<ProjectList> {
       backgroundColor: const Color(0xFFF9FAF9),
       body: Stack(
         children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/projectsBG.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            top: 770,
-            child: Container(
-              height: 56,
-              color: const Color(0xFFF9FAF9),
-            ),
-          ),
-          // Content
-          Column(
-            children: [
-              // Info box and tab buttons without extra padding at the top
-              Container(
-                padding: const EdgeInsets.only(top: 180, left: 16, right: 16),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildTabButton(0, "مكتملة"),
-                        const SizedBox(height: 6, width: 10),
-                        _buildTabButton(1, "تحت المعالجة"),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              // Display selected tab content
-              Expanded(
-                child: _selectedTopTabIndex == 0
-                    ? _buildCompletedProjects()
-                    : _buildProcessingProjects(),
-              ),
-            ],
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'الحساب الشخصي',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.nature),
-            label: 'المشاريع الزراعية',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'الرئيسية',
-          ),
-        ],
-        currentIndex: _selectedBottomTabIndex,
-        selectedItemColor: const Color(0xFF4B7960),
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          if (index == 0) {
-            // Navigate to Profile Page
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
-            );
-          } else if (index == 1) {
-            // Navigate to Project List (current page)
-            setState(() {
-              _selectedBottomTabIndex = index;
-            });
-          } else if (index == 2) {
-            // Navigate to Home Page
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const FarmerHomePage()),
-              (route) => route.isFirst,
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildTabButton(int index, String title) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedTopTabIndex = index;
-          });
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: _selectedTopTabIndex == index
-                ? const LinearGradient(
-                    colors: [
-                      Color(0xFF4B7960),
-                      Color(0xFF728F66),
-                      Color(0xFFA2AA6D)
-                    ],
-                  )
-                : null,
-            color: _selectedTopTabIndex == index ? null : Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: const Color(0xFF4B7960),
-              width: 1,
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: _selectedTopTabIndex == index
-                    ? Colors.white
-                    : const Color(0xFF4B7960),
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Markazi Text',
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCompletedProjects() {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: 4, // Example count, replace with actual data
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  if (index == 0) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const AgriculturalProjectScreen()),
-                    );
-                  }
-                },
-                child: const Card(
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-                  child: ListTile(
-                    title: Text('مشروع زراعة الطماطم',
-                        style: TextStyle(fontFamily: 'Markazi Text')),
-                    subtitle: Text('المزيد...',
-                        style: TextStyle(fontFamily: 'Markazi Text')),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('100%',
-                            style: TextStyle(color: Color(0xFF4B7960))),
-                        SizedBox(height: 5),
-                        Text('ساجر', style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
+          _buildAppBar(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 200),
+                Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: MediaQuery.of(context).size.height * 0.64,
+                    child:
+                        _buildTabContent(), // Display projects based on selected tab
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-        // Add Project button with gradient
-        Padding(
-          padding: const EdgeInsets.all(100.0),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF4B7960),
-                  Color(0xFF728F66),
-                  Color(0xFFA2AA6D)
-                ],
-              ),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AddProject()),
-                );
-              },
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text(
-                "أضف مشروع",
-                style: TextStyle(
-                    fontFamily: 'Markazi Text',
-                    fontSize: 16,
-                    color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 2, horizontal: 10), //size of it
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProcessingProjects() {
-    return Column(
-      children: [
-        const Expanded(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "لا يوجد لديك أي مشروع زراعي",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                      fontFamily: 'Markazi Text'),
-                ),
-                SizedBox(height: 20),
               ],
             ),
           ),
+          // Segmented control for switching between project states
+          Positioned(
+            top: 220,
+            left: 0,
+            right: 0,
+            child: Center(child: _buildSegmentedControl()),
+          ),
+        ],
+      ),
+      bottomNavigationBar: _buildBottomNavigation(), // Bottom navigation
+    );
+  }
+
+  // Custom app bar with gradient background
+  Widget _buildAppBar() {
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(20),
+        bottomRight: Radius.circular(20),
+      ),
+      child: Container(
+        height: 320,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF345E50), Color(0xFF49785E), Color(0xFFA8B475)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-        // Add Project button for Processing Projects with gradient
-        Padding(
-          padding: const EdgeInsets.all(100.0),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF4B7960),
-                  Color(0xFF728F66),
-                  Color(0xFFA2AA6D)
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 150.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text(
+                    'المشاريع الزراعية',
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'يمكنك هنا متابعة حالة كل فرصة، ومراجعة التفاصيل المتعلقة بها، وتحديث المعلومات.',
+                    style: TextStyle(fontSize: 15, color: Colors.white70),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
-              borderRadius: BorderRadius.circular(50),
             ),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AddProject()),
-                );
-              },
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text(
-                "أضف مشروع",
-                style: TextStyle(
-                    fontFamily: 'Markazi Text',
-                    fontSize: 16,
-                    color: Colors.white),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Segmented control for toggling between "In Process" and "Completed" projects
+  Widget _buildSegmentedControl() {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF345E50), Color(0xFFA8B475)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildTabButton('تحت المعالجة', 0),
+          _buildTabButton('مكتملة', 1),
+        ],
+      ),
+    );
+  }
+
+  // Tab button to switch between project states
+  Widget _buildTabButton(String label, int index) {
+    return GestureDetector(
+      onTap: () => setState(() => _selectedTopTabIndex = index),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+        decoration: BoxDecoration(
+          color: _selectedTopTabIndex == index
+              ? Colors.white54
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 15,
+            color: _selectedTopTabIndex == index
+                ? Color(0xFF345E50)
+                : Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Content for selected tab, showing either "In Process" or "Completed" projects
+  Widget _buildTabContent() {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(40),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 70),
+          Expanded(
+            child: Scrollbar(
+              thickness: 5.0,
+              radius: Radius.circular(20),
+              child: SingleChildScrollView(
+                child: _selectedTopTabIndex == 0
+                    ? _buildProcessingProjects()
+                    : _buildCompletedProjects(),
               ),
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          const SizedBox(height: 10),
+          _buildAddProjectButton(), // Button to add a new project
+        ],
+      ),
+    );
+  }
+
+  // Widget for completed projects list
+  Widget _buildCompletedProjects() {
+    return Column(
+      children: [
+        _buildProjectItem('assets/images/farm1.png', 'مشروع زراعة الطماطم'),
+        const Divider(color: Colors.grey, thickness: 1.0),
+        _buildProjectItem('assets/images/farm1.png', 'مشروع زراعة البطاطا'),
+        const Divider(color: Colors.grey, thickness: 1.0),
+        _buildProjectItem('assets/images/farm1.png', 'مشروع زراعة الفواكه'),
+      ],
+    );
+  }
+
+  // Display message when there are no "In Process" projects
+  Widget _buildProcessingProjects() {
+    return const Center(
+      child: Text(
+        "لا يوجد لديك أي مشروع زراعي",
+        style: TextStyle(fontSize: 18, color: Colors.grey),
+      ),
+    );
+  }
+
+  // Individual project item with title, image, and action buttons
+  Widget _buildProjectItem(String imagePath, String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.asset(imagePath,
+                width: 60, height: 60, fit: BoxFit.cover),
+          ),
+          const SizedBox(width: 15.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                      color: Color(0xFF345E50),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.right,
                 ),
+                const SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const AgriculturalProjectScreen()),
+                        );
+                      },
+                      child: const Text(
+                        "...المزيد",
+                        style: TextStyle(color: Color(0xFF345E50)),
+                      ),
+                    ),
+                    const SizedBox(
+                        width: 80), // Space between "More" and "Deposit" button
+                    Container(
+                      width: 90,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFF4B7960),
+                            Color(0xFF728F66),
+                            Color(0xFFA2AA6D),
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const DepositReturnsScreen()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        child: const Text(
+                          "إيداع الأرباح",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Button to add a new project
+  Widget _buildAddProjectButton() {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF4B7960), Color(0xFF728F66), Color(0xFFA2AA6D)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: SizedBox(
+          height: 35,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddProject()),
+              );
+            },
+            icon: const Icon(Icons.add, color: Colors.white),
+            label: const Text(
+              "أضف مشروع",
+              style: TextStyle(
+                fontFamily: 'Markazi Text',
+                fontSize: 15,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // Bottom navigation bar for different pages
+  BottomNavigationBar _buildBottomNavigation() {
+    return BottomNavigationBar(
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'حسابي'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.nature), label: 'المشاريع الزراعية'),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
       ],
+      currentIndex: _selectedBottomTabIndex,
+      selectedItemColor: const Color(0xFF4B7960),
+      unselectedItemColor: Colors.grey,
+      onTap: (index) {
+        if (index == 0) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()));
+        } else if (index == 1) {
+          setState(() => _selectedBottomTabIndex = index);
+        } else if (index == 2) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const FarmerHomePage()),
+            (route) => route.isFirst,
+          );
+        }
+      },
     );
   }
 }

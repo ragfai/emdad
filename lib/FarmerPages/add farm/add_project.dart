@@ -9,7 +9,7 @@ class AddProject extends StatefulWidget {
 }
 
 class _AddProjectFormScreenState extends State<AddProject> {
-  // Controllers for the form fields
+  // Controllers for text fields to capture user inputs
   final TextEditingController projectNameController = TextEditingController();
   final TextEditingController regionController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
@@ -22,160 +22,192 @@ class _AddProjectFormScreenState extends State<AddProject> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF9FAF9),
-      body: Stack(
-        children: [
-          // Gradient header at the top
-          Container(
-            height: 160,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF4B7960),
-                  Color(0xFF728F66),
-                  Color(0xFFA2AA6D),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-            ),
-            padding: const EdgeInsets.only(top: 50, left: 16),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                const Spacer(),
-                const Text(
-                  'بيانات الفرصة الزراعية',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-              ],
-            ),
-          ),
-          // Main content
-          Padding(
-            padding: const EdgeInsets.only(top: 140, left: 30, right: 30),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 20),
-                  // White box to contain all fields
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(33),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          spreadRadius: 5,
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        _buildTextFieldWithLine(
-                            projectNameController, 'اسم المشروع'),
-                        _buildTextFieldWithLine(regionController, 'المنطقة'),
-                        _buildTextFieldWithLine(addressController, 'العنوان'),
-                        _buildTextFieldWithLine(
-                            cropTypeController, 'نوع المحصول'),
-                        _buildTextFieldWithLine(totalAreaController,
-                            'المساحة الكلية (بالأمتار أو الهكتار)'),
-                        _buildTextFieldWithLine(
-                            opportunityDurationController, 'مدة الفرصة'),
-                        _buildTextFieldWithLine(
-                            productionRateController, 'معدل الإنتاج'),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // "إضافة المزرعة" Button with gradient
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50.0),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF4B7960),
-                          Color(0xFF728F66),
-                          Color(0xFFA2AA6D),
+    return Directionality(
+      textDirection:
+          TextDirection.rtl, // Sets the text direction to right-to-left
+      child: Scaffold(
+        backgroundColor:
+            const Color(0xFFF9FAF9), // Background color of the screen
+        body: Stack(
+          children: [
+            _buildAppBar(), // Custom app bar widget
+            Padding(
+              padding: const EdgeInsets.only(top: 200, left: 20, right: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(24.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(40),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            spreadRadius: 5,
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          // Text fields to capture project details
+                          _buildTextField(projectNameController, 'اسم المشروع'),
+                          _buildTextField(regionController, 'المنطقة'),
+                          _buildTextField(addressController, 'العنوان'),
+                          _buildTextField(cropTypeController, 'نوع المحصول'),
+                          _buildTextField(totalAreaController,
+                              'المساحة الكلية (بالأمتار أو الهكتار)'),
+                          _buildTextField(
+                              opportunityDurationController, 'مدة الفرصة'),
+                          _buildTextField(
+                              productionRateController, 'معدل الإنتاج'),
                         ],
                       ),
                     ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SuccessScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
+                    const SizedBox(height: 30),
+                    // Add farm button
+                    Center(
+                      child: Container(
+                        width: 200,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFF4B7960),
+                              Color(0xFF728F66),
+                              Color(0xFFA2AA6D),
+                            ],
+                          ),
                         ),
-                        shadowColor: Colors.transparent,
-                      ),
-                      child: const Text(
-                        'إضافة المزرعة',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Navigate to SuccessScreen on button click
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SuccessScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                          ),
+                          child: const Text(
+                            'إضافة المزرعة',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 50),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  // Helper method to build text fields with a larger gradient line underneath
-  Widget _buildTextFieldWithLine(
-      TextEditingController controller, String labelText) {
+  // Custom app bar widget
+  Widget _buildAppBar() {
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(20),
+        bottomRight: Radius.circular(20),
+      ),
+      child: Container(
+        height: 320,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF345E50), Color(0xFF49785E), Color(0xFFA8B475)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Stack(
+          children: [
+            // Back button
+            Positioned(
+              top: 50,
+              right: 15,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+            // Title and description text
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 150.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text(
+                      'بيانات الفرصة الزراعية',
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'يرجى ملء جميع التفاصيل المتعلقة بمزرعتك.',
+                      style: TextStyle(fontSize: 15, color: Colors.white70),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Reusable text field builder with gradient underline
+  Widget _buildTextField(TextEditingController controller, String labelText) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
           controller: controller,
+          textAlign: TextAlign.right,
+          textDirection: TextDirection.rtl,
           decoration: InputDecoration(
             labelText: labelText,
-            labelStyle: const TextStyle(
-                color: Color(0xFFA09E9E)), // Updated color for label text
-            border: InputBorder.none,
+            labelStyle: const TextStyle(color: Color(0xFFA09E9E)),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
           ),
-          textAlign: TextAlign.right,
         ),
-        const SizedBox(height: 5),
-        // Larger gradient line
         Container(
-          height: 2.5,
+          height: 1,
           width: double.infinity,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -187,7 +219,7 @@ class _AddProjectFormScreenState extends State<AddProject> {
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
       ],
     );
   }

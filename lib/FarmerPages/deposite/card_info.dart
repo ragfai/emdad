@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 
-class DepositReturnsScreen extends StatefulWidget {
-  const DepositReturnsScreen({super.key});
-
-  @override
-  _DepositReturnsScreenState createState() => _DepositReturnsScreenState();
-}
-
-class _DepositReturnsScreenState extends State<DepositReturnsScreen> {
-  String? selectedPaymentMethod = 'mada'; // Default selected payment method
+class CardInfoScreen extends StatelessWidget {
+  const CardInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAF9), // Set screen background color
+      backgroundColor:
+          const Color(0xFFF9FAF9), // Set background color for the screen
       body: Stack(
         children: [
-          // Top gradient background with a rounded border at the bottom
+          // Top gradient background for header
           Container(
             height: 320,
             width: double.infinity,
@@ -59,7 +53,7 @@ class _DepositReturnsScreenState extends State<DepositReturnsScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: const [
                         Text(
-                          'ايداع عوائد المزرعة', // Main title
+                          'عملية الدفع', // Main title
                           style: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
@@ -68,7 +62,7 @@ class _DepositReturnsScreenState extends State<DepositReturnsScreen> {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          'يرجى إدخال قيمة العائد مع اختيار طريقة الدفع\n المناسبة لإتمام العملية',
+                          'لإكمال عملية الدفع، يرجى إدخال بيانات بطاقة الدفع\n الخاصة بك بشكل دقيق.',
                           style: TextStyle(fontSize: 15, color: Colors.white70),
                           textAlign: TextAlign.center,
                         ),
@@ -80,7 +74,7 @@ class _DepositReturnsScreenState extends State<DepositReturnsScreen> {
             ),
           ),
 
-          // Main content area with form fields for deposit and payment method
+          // Main content section with white background
           Padding(
             padding: const EdgeInsets.only(top: 200, left: 16, right: 16),
             child: SingleChildScrollView(
@@ -104,21 +98,34 @@ class _DepositReturnsScreenState extends State<DepositReturnsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 40),
-                        _buildLabel(
-                            'أدخل عائد المزرعة'), // Label for amount input
-                        const SizedBox(height: 5),
-                        _buildAmountInput(), // Text field for inputting deposit amount
-                        _buildDivider(), // Divider for visual separation
-                        const SizedBox(height: 50),
-                        _buildLabel(
-                            'اختر طريقة الدفع'), // Label for payment method selection
-                        _buildPaymentMethod(
-                            'mada', 'assets/icons/MadaIcon.png'),
                         const SizedBox(height: 10),
-                        _buildPaymentMethod(
-                            'applePay', 'assets/icons/applepayIcon.png'),
-                        const SizedBox(height: 40),
+                        _buildTextField('رقم البطاقة'), // Card number field
+                        const SizedBox(height: 20),
+                        _buildTextField('اسم المستخدم'), // User name field
+                        const SizedBox(height: 20),
+                        // Row for CVC and expiration date fields
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 8),
+                                  _buildTextField(
+                                      'رمز التحقق (CVC)'), // CVC field
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: _buildDropdownField(
+                                'تاريخ الإنتهاء',
+                                _buildYearsList(), // Expiration date dropdown
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 30),
                         _buildNextButton(context), // Button to proceed
                       ],
                     ),
@@ -132,80 +139,29 @@ class _DepositReturnsScreenState extends State<DepositReturnsScreen> {
     );
   }
 
-  // Widget to display a label with bold text
-  Widget _buildLabel(String text) {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF345E50),
-        ),
-      ),
-    );
-  }
-
-  // Text field for entering the deposit amount
-  Widget _buildAmountInput() {
-    return const TextField(
-      textAlign: TextAlign.right,
-      decoration: InputDecoration(
-        hintText: 'القيمة بالريال السعودي',
-        hintStyle: TextStyle(color: Color(0xFFA09E9E)),
-        border: InputBorder.none,
-      ),
-      style: TextStyle(color: Color(0xFFA09E9E)),
-    );
-  }
-
-  // Gradient divider for separating sections
-  Widget _buildDivider() {
-    return Container(
-      height: 1,
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF4B7960),
-            Color(0xFF728F66),
-            Color(0xFFA2AA6D),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Payment method selection with a radio button and icon
-  Widget _buildPaymentMethod(String method, String assetPath) {
-    return Row(
+  // Reusable method to build a text field with an underline gradient
+  Widget _buildTextField(String labelText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedPaymentMethod = method;
-              });
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Radio<String>(
-                  value: method,
-                  groupValue: selectedPaymentMethod,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPaymentMethod = value.toString();
-                    });
-                  },
-                  activeColor: const Color(0xFF4B7960),
-                ),
-                Image.asset(
-                  assetPath,
-                  height: 50,
-                  width: 50,
-                ),
+        TextField(
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: labelText,
+            hintStyle: const TextStyle(color: Color(0xFFA09E9E)),
+            border: InputBorder.none,
+          ),
+          style: const TextStyle(color: Color(0xFFA09E9E)),
+        ),
+        Container(
+          height: 1,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4B7960),
+                Color(0xFF728F66),
+                Color(0xFFA2AA6D),
               ],
             ),
           ),
@@ -214,7 +170,61 @@ class _DepositReturnsScreenState extends State<DepositReturnsScreen> {
     );
   }
 
-  // Next button to proceed to the payment process screen
+  // Dropdown field for selecting expiration date
+  Widget _buildDropdownField(String labelText, List<String> items) {
+    String? selectedValue;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownButtonFormField<String>(
+          value: selectedValue,
+          onChanged: (String? newValue) {
+            selectedValue = newValue;
+          },
+          items: items.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: const TextStyle(color: Color(0xFFA09E9E)),
+                textAlign: TextAlign.right,
+              ),
+            );
+          }).toList(),
+          decoration: InputDecoration(
+            labelText: labelText,
+            labelStyle: const TextStyle(color: Color(0xFFA09E9E)),
+            border: InputBorder.none,
+          ),
+        ),
+        Container(
+          height: 1,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4B7960),
+                Color(0xFF728F66),
+                Color(0xFFA2AA6D),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Builds a list of years for the expiration date dropdown
+  List<String> _buildYearsList() {
+    final currentYear = DateTime.now().year;
+    return List<String>.generate(
+      20, // Generates the next 20 years
+      (index) => (currentYear + index).toString(),
+    );
+  }
+
+  // Button to navigate to the payment process screen
   Widget _buildNextButton(BuildContext context) {
     return Center(
       child: Container(
@@ -233,7 +243,7 @@ class _DepositReturnsScreenState extends State<DepositReturnsScreen> {
         child: ElevatedButton(
           onPressed: () {
             Navigator.pushNamed(
-                context, '/card_info'); // Navigate to Card Info Screen
+                context, '/payment-process'); // Navigates to payment process
           },
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.zero,
